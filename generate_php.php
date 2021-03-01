@@ -17,8 +17,8 @@
         // print_r($options);
     }
 
-    $code = "<form method=\"$form_method\" action=\"$form_action\" class=\"$form_class\" enctype=\"multipart/form-data\">  \n";
-    $code .= "@csrf\n";
+    $code = "<form method=\"$form_method\" action=\"$form_action\" class=\"$form_class\"> \n";
+
     $method = "\$_".strtoupper($form_method);
     
     $fields = [];
@@ -35,21 +35,10 @@
         if(!empty($html_before)){
             $code .= "  $html_before\n";
             $tab = "    ";
-        }   
-            $code .= $tab."<div class=\"col-lg-12\">\n";
-            $code .= $tab."<label for=\"$name\" class=\"col-md-12 col-form-label\">Add $name</label>\n";
-            $code .= $tab."<input id=\"$name\" type=\"$type\" name=\"$name\" class=\"form-control-file @error('image') is-invalid @enderror\" value=\"{{ old('$name') }}\" autocomplete=\"$name\">\n";
-            $code .= $tab."@error('image')\n";
-            $code .= $tab."<span class=\"invalid-feedback\" role=\"alert\">\n";
-            $code .= $tab."<strong>{{ \$message }}</strong>\n";
-            $code .= $tab."</span>\n";
-            $code .= $tab."@enderror\n";
-          
-            ?>
-         
-              
-            
-            <?php
+        }
+            $code .= $tab."  <label>$name</label>\n";
+            $code .= $tab."  <input type=\"$type\" class=\"$input_class\" name=\"$name\">\n ";
+        
         if(!empty($html_after)){
         $code .= "  $html_after\n";
         }
@@ -77,9 +66,6 @@
     $i_query = "INSERT INTO table_name($fields) VALUES($values);";
     $post .= "\n\$query = \"$i_query\";";
     $code .= "\n";
-    $code .= "</div>\n";
-    $code .= "<div class=\"form-group mt-3\">\n";
-    $code .= "<button type=\"submit\" class=\"btn btn-primary\">Add</button>\n</div>";
     $code .= "</form>";
     
 ?>

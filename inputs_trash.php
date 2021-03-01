@@ -54,6 +54,7 @@ if(isset($_POST['submit'])){
                 <option value="email">Email</option>
                 <option value="password">Password</option>
                 <option value="time">Time</option>
+                <option value="file">File</option>
                 <option value="hidden">Hidden</option>
         
             </select>
