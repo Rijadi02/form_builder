@@ -44,7 +44,7 @@
             $code .= $tab."<strong>{{ \$message }}</strong>\n";
             $code .= $tab."</span>\n";
             $code .= $tab."@enderror\n";
-          
+            $code .= $tab."</div>\n";
             ?>
          
               
@@ -77,7 +77,7 @@
     $i_query = "INSERT INTO table_name($fields) VALUES($values);";
     $post .= "\n\$query = \"$i_query\";";
     $code .= "\n";
-    $code .= "</div>\n";
+  
     $code .= "<div class=\"form-group mt-3\">\n";
     $code .= "<button type=\"submit\" class=\"btn btn-primary\">Add</button>\n</div>";
     $code .= "</form>";
