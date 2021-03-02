@@ -39,7 +39,7 @@
             $code .= $tab."<div class=\"col-lg-12\">\n";
             $code .= $tab."<label for=\"$name\" class=\"col-md-12 col-form-label\">Add $name</label>\n";
             $code .= $tab."<input id=\"$name\" type=\"$type\" name=\"$name\" class=\"form-control-file @error('image') is-invalid @enderror\" value=\"{{ old('$name') }}\" autocomplete=\"$name\">\n";
-            $code .= $tab."@error('image')\n";
+            $code .= $tab."@error('$name')\n";
             $code .= $tab."<span class=\"invalid-feedback\" role=\"alert\">\n";
             $code .= $tab."<strong>{{ \$message }}</strong>\n";
             $code .= $tab."</span>\n";
