@@ -1,5 +1,11 @@
 
 <?php
+    $code = '';    
+    function br(){
+        global $code;
+        $code .= "\n";
+    }
+
     if(isset($_POST['submit'])){
         $form_method = $_POST["form_method"];
         $form_action = $_POST["form_action"];
@@ -8,7 +14,7 @@
         $html_after = $_POST["html_after"];
         $input_class = $_POST["input_class"];
         $inputs_number = $_POST["inputs_number"];
-    
+        $old_var = $_POST["old_var"];
         $options = [];
         foreach (range(0, $inputs_number-1) as $number) {
             $op = "option".$number;
@@ -16,10 +22,84 @@
         };
         // print_r($options);
     }
+    //Update
+    $code .= "@if (isset($$old_var))";
+    br();
+    $code .= sprintf('<form method="%s" action="{{ route("%s.update", $%s->id) }}" enctype="multipart/form-data">',$form_method,$form_action,$old_var);
+    br();
+    $code .= "@csrf";
+    br();
+    $code .= "@method('PATCH')";
+    br();
 
-    $code = "<form method=\"$form_method\" action=\"$form_action\" class=\"$form_class\" enctype=\"multipart/form-data\">  \n";
-    $code .= "@csrf\n";
+
+    foreach($options as $option => $value){
+        $name = $value[0];
+        $type = $value[1];
+        
+        $tab = "";
+
+        $code .= "\n";
+        
+        if(!empty($html_before)){
+            $code .= "  $html_before\n";
+            $tab = "    ";
+        }   
+            // $code .= $tab."<div class=\"col-lg-12\">\n";
+            $code .= $tab.'<div class="col-lg-12">';
+            br();
+            // $code .= $tab."<label for=\"$name\" class=\"col-md-12 col-form-label\">Add $name</label>\n";
+            $code .= $tab.sprintf('<label for="%s" class="col-md-12 col-form-label">Add %s</label>',$name,$name); 
+            br();
+            // $code .= $tab."<input id=\"$name\" type=\"$type\" name=\"$name\" class=\"form-control-file @error('$name') is-invalid @enderror\" value=\"{{ old('$name') }}\" autocomplete=\"$name\">\n";
+            $code .= $tab.sprintf('<input id="%s" type="%s" name="%s" class="form-control-file @error("%s") is-invalid @enderror" value="{{ old("%s") ?? $%s->%s }}" autocomplete="%s">',$name,$type,$name,$name,$name,$old_var,$name,$name);
+            br();
+            // $code .= $tab."@error('$name')\n";
+            $code .= $tab.sprintf('@error("%s")',$name);
+            br();
+            // $code .= $tab."<span class=\"invalid-feedback\" role=\"alert\">\n";
+            $code .= $tab.'<span class="invalid-feedback" role="alert">';
+            br();
+            $code .= $tab.'<strong>{{ $message }}</strong>\n';
+            br();
+            $code .= $tab."</span>";
+            br();
+            $code .= $tab."@enderror";
+            br();
+            $code .= $tab."</div>";
+            br();
+            ?> 
+            <?php
+        if(!empty($html_after)){
+        $code .= "  $html_after\n";
+        }
+        
+        
+    }
+
+    $code .= ' <div class="form-group mt-3">';
+    br();
+    $code .= '<button type="submit" class="btn btn-primary">Update</button>';
+    br();
+    $code .= '</form>';
+    br();
+    br();
+
+    //Update End
+    $code .= '@else';
+    br();
+    br();
+
+    //Insert
+
+    // $code .= "<form method=\"$form_method\" action=\"$form_action\" class=\"$form_class\" enctype=\"multipart/form-data\">  \n";
+    // $code .= "@csrf\n";
     $method = "\$_".strtoupper($form_method);
+
+    $code .= sprintf('<form method="%s" action="{{ route("%s.store") }}" enctype="multipart/form-data">',$form_method,$form_action);
+    br();
+    $code .= "@csrf";
+    br();
     
     $fields = [];
     $values = [];
@@ -36,51 +116,39 @@
             $code .= "  $html_before\n";
             $tab = "    ";
         }   
-            $code .= $tab."<div class=\"col-lg-12\">\n";
-            $code .= $tab."<label for=\"$name\" class=\"col-md-12 col-form-label\">Add $name</label>\n";
-            $code .= $tab."<input id=\"$name\" type=\"$type\" name=\"$name\" class=\"form-control-file @error('$name') is-invalid @enderror\" value=\"{{ old('$name') }}\" autocomplete=\"$name\">\n";
-            $code .= $tab."@error('$name')\n";
-            $code .= $tab."<span class=\"invalid-feedback\" role=\"alert\">\n";
-            $code .= $tab."<strong>{{ \$message }}</strong>\n";
-            $code .= $tab."</span>\n";
-            $code .= $tab."@enderror\n";
-            $code .= $tab."</div>\n";
-            ?>
-         
-              
-            
-            <?php
-        if(!empty($html_after)){
-        $code .= "  $html_after\n";
-        }
-        
-        array_push($fields,"`$name`");
-        switch($type){
-            case "date":
-                array_push($values,"STR_TO_DATE('$$name', '%Y-%m-%d')");
-                break;
-            default:
-                array_push($values,"'$$name'");
-        };
-        switch($type){
-            case "time":
-                $post .= "$$name = date(\"G:i\", strtotime(htmlspecialchars(".$method."[\"$name\"])));\n";
-                break;
-            default:
-                $post .= "$$name = htmlspecialchars(".$method."[\"$name\"]);\n";
-        };
-     
-    }
-    $fields = implode(', ', $fields);
-    $values = implode(', ', $values);
+             // $code .= $tab."<div class=\"col-lg-12\">\n";
+             $code .= $tab.'<div class="col-lg-12">';
+             br();
+             // $code .= $tab."<label for=\"$name\" class=\"col-md-12 col-form-label\">Add $name</label>\n";
+             $code .= $tab.sprintf('<label for="%s" class="col-md-12 col-form-label">Add %s</label>',$name,$name); 
+             br();
+             // $code .= $tab."<input id=\"$name\" type=\"$type\" name=\"$name\" class=\"form-control-file @error('$name') is-invalid @enderror\" value=\"{{ old('$name') }}\" autocomplete=\"$name\">\n";
+             $code .= $tab.sprintf('<input id="%s" type="%s" name="%s" class="form-control-file @error("%s") is-invalid @enderror" value="{{ old("%s") }}" autocomplete="%s">',$name,$type,$name,$name,$name,$name);
+             br();
+             // $code .= $tab."@error('$name')\n";
+             $code .= $tab.sprintf('@error("%s")',$name);
+             br();
+             // $code .= $tab."<span class=\"invalid-feedback\" role=\"alert\">\n";
+             $code .= $tab.'<span class="invalid-feedback" role="alert">';
+             br();
+             $code .= $tab.'<strong>{{ $message }}</strong>';
+             br();
+             $code .= $tab."</span>";
+             br();
+             $code .= $tab."@enderror";
+             br();
+             $code .= $tab."</div>";
+             br();
 
-    $i_query = "INSERT INTO table_name($fields) VALUES($values);";
-    $post .= "\n\$query = \"$i_query\";";
-    $code .= "\n";
-  
-    $code .= "<div class=\"form-group mt-3\">\n";
-    $code .= "<button type=\"submit\" class=\"btn btn-primary\">Add</button>\n</div>";
-    $code .= "</form>";
+    }
+    $code .= ' <div class="form-group mt-3">';
+    br();
+    $code .= '<button type="submit" class="btn btn-primary">Add</button>';
+    br();
+    $code .= '</form>';
+    br();
+    $code .= '@endif';
+
     
 ?>
 

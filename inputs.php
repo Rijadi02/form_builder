@@ -63,13 +63,17 @@ if (isset($_POST['submit'])) {
 
                                         <div class="sbp-preview-content">
                                             <form method="post" action="generate.php">
+                                               Old variable=&quot;
+                                                <input class="form-control form-control-solid mb-5" name="old_var" style="display: inline; width: 20%;" type="text" placeholder="article" />
+                                                &quot;
+                                                <br>
                                                 &lt;form method=&quot;
                                                 <select class="form-control form-control-solid" name="form_method" style="display: inline; width: 20%;">
                                                     <option value="POST">POST</option>
                                                     <option value="GET">GET</option>
                                                 </select>
                                                 &quot; &nbsp; action=&quot;
-                                                <input class="form-control form-control-solid" name="form_action" style="display: inline; width: 20%;" type="text" />
+                                                <input class="form-control form-control-solid" name="form_action" style="display: inline; width: 20%;" type="text" placeholder="article"/>
                                                 &quot; &nbsp; class=&quot;
                                                 <input class="form-control form-control-solid" name="form_class" style="display: inline; width: 30%;" type="text" />
                                                 &quot; &gt;
